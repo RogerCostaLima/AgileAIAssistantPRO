@@ -77,14 +77,14 @@ h1.st-emotion-cache-121aa6r {{
     border-left: 5px solid {CORES_COCA["VERMELHO_PRIMARIO"]}; 
     padding: 15px;
     border-radius: 5px;
-    white-space: pre-wrap; /* Garante quebras de linha e estrutura */
+    white-space: pre-wrap; 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.5; /* Espaçamento de linha mais compacto */
-    margin-bottom: 10px; /* Espaço após a caixa */
+    line-height: 1.5; 
+    margin-bottom: 10px; 
 }}
 /* Estilo para o TÍTULO DA ABA DE RESULTADOS */
 .result-tab-title {{
-    background-color: {CORES_COCA["PRETO_SOLIDO"]}; /* Fundo Preto Sólido */
+    background-color: {CORES_COCA["PRETO_SOLIDO"]}; 
     color: white;
     font-size: 1.2em;
     font-weight: bold;
@@ -120,7 +120,6 @@ def exportar_pdf(resultados, filename="artefatos.pdf"):
     pdf.set_font("Arial", 'B', 18)
     pdf.set_text_color(230, 0, 0) 
     
-    # 1. Título principal do PDF sem emojis
     pdf.cell(0, 15, "ARTEFATOS ÁGEIS GERADOS POR IA", ln=True, align='C') 
     pdf.ln(10)
     
@@ -129,14 +128,12 @@ def exportar_pdf(resultados, filename="artefatos.pdf"):
         pdf.set_font("Arial", 'B', 14)
         pdf.set_text_color(0, 0, 0)
         
-        # 2. Título do Artefato sem emojis (uso de .upper() garante o nome)
         pdf.cell(0, 8, f"{tipo.upper()}", ln=True, fill=True)
         
         pdf.set_font("Arial", '', 11)
         pdf.set_text_color(50, 50, 50)
         
         try:
-            # Garante que o conteúdo seja lido, mesmo com possíveis problemas de codificação
             conteudo_str = conteudo.encode('latin-1', 'replace').decode('latin-1')
         except:
             conteudo_str = conteudo 
@@ -302,7 +299,8 @@ if menu_option == "🧠 Geração de Artefatos":
                         unsafe_allow_html=True
                     )
                     
-                    # Usa a classe CSS para quebrar linha e dar o visual premium
+                    # 🌟 CORREÇÃO DE LÓGICA APLICADA AQUI
+                    # Acessa o resultado específico para a aba atual usando a variável 'tipo'
                     conteudo = st.session_state["resultados"].get(tipo, "Não gerado ou erro.")
                     
                     # Aplica o estilo de caixa de texto com a cor da borda do artefato
@@ -419,5 +417,4 @@ elif menu_option == "📂 Exportação":
                     use_container_width=True
                 )
             except Exception as e:
-                # O erro de codificação do PDF deve estar resolvido
                 st.error(f"Erro ao gerar PDF: {e}. Se o erro persistir, verifique a instalação do fpdf.")
