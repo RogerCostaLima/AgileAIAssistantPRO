@@ -437,17 +437,22 @@ elif menu_option == "⚙️ Configurações de IA":
         st.subheader("🔑 Chaves de API (Acesso aos Modelos)")
         st.info("Insira sua chave de acesso para cada modelo de IA. Elas são salvas localmente no `config.json`.")
         
-        # --- Layout VERTICAL e CLARO para as chaves ---
+        # --- Layout HORIZONTAL para as chaves ---
+        col_api1, col_api2, col_api3 = st.columns(3)
         keys_list = list(config["api_keys"].keys())
-        for key in keys_list:
-            st.markdown(f"**{key.upper()} API Key**")
-            config["api_keys"][key] = st.text_input(
-                f"Chave {key.upper()}", 
-                value=config["api_keys"].get(key, ""), 
-                type="password",
-                label_visibility="collapsed",
-                key=f"api_key_{key}" # Chave única para persistência
-            )
+        columns = [col_api1, col_api2, col_api3]
+
+        for i, key in enumerate(keys_list):
+            with columns[i]:
+                st.markdown(f"**{key.upper()} API Key**")
+                config["api_keys"][key] = st.text_input(
+                    f"Chave {key.upper()}", 
+                    value=config["api_keys"].get(key, ""), 
+                    type="password",
+                    label_visibility="collapsed",
+                    key=f"api_key_{key}" # Chave única para persistência
+                )
+        # --- Fim do Layout Horizontal ---
 
         st.subheader("🤖 Papel da IA (System Role)")
         config["ia_role"] = st.text_area("Descreva como a IA deve atuar", value=config.get("ia_role", INITIAL_CONFIG["ia_role"]), height=100, 
