@@ -322,9 +322,7 @@ elif menu_option == "ℹ️ Sobre":
     
     ### 🎯 Nosso Objetivo
     Reduzir o tempo gasto em detalhamento e documentação, permitindo que o time se concentre na **entrega de valor**.
-    
     ---
-    
     #### 👑 EPIC (Visão)
     Define o objetivo de alto nível.
     
@@ -336,9 +334,7 @@ elif menu_option == "ℹ️ Sobre":
     
     #### 🛠️ TASK (Execução)
     As atividades técnicas necessárias para implementar a User Story.
-    
     ---
-    
     **Desenvolvido com 💛 e Python/Streamlit.**
     """)
 
@@ -379,4 +375,5 @@ elif menu_option == "📂 Exportação":
                     use_container_width=True
                 )
             except Exception as e:
+
                 st.error(f"Erro ao gerar PDF: {e}. Verifique as permissões de codificação de texto.")
