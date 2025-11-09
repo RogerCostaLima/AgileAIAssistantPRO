@@ -6,7 +6,6 @@ from utils import exportar_artefatos, baixar_excel, extrair_texto_ppt
 from fpdf import FPDF # type: ignore
 import io
 import pandas as pd
-import re # Usado para simular a separação dos artefatos
 
 # =====================
 # CONFIGURAÇÃO DE ESTILO E CORES PREMIUM (COCA-COLA INSPIRED)
@@ -110,110 +109,8 @@ except FileNotFoundError:
     st.error("Arquivo config.json não encontrado. Crie um antes de rodar o app.")
     st.stop()
 
-# =========================================================================================
-# FUNÇÕES AUXILIARES PARA MAPEAR O CONTEÚDO (PARA TESTE)
-# =========================================================================================
-
-# Conteúdo fornecido pelo usuário, mapeado para a função de simulação
-CONTEUDO_BRUTO = """
-Com certeza. Como especialista em agilidade e na construção de backlogs inteligentes, entendo que a clareza do "porquê" é mais importante do que o "o quê".O contexto "Criar um dash em Power BI para medir performance" é um ótimo ponto de partida, mas é um pedido de solução. Para criarmos artefatos com foco em valor, precisamos entender o problema e o objetivo de negócio.
-Antes de gerar os itens, preciso de um pouco mais de detalhe. Por favor, responda brevemente:
-
-Performance de quê? (Ex: Vendas, campanhas de marketing, tempo de resposta de atendimento, estabilidade da aplicação, etc.)
-Quem vai usar este dashboard? (Ex: Diretoria, Gerentes de Vendas, Time de TI, etc.)
-
-Qual a principal decisão que será tomada com base nesses dados? (Ex: Onde investir mais, quem precisa de treinamento, qual produto descontinuar, etc.)
-Para não te deixar sem uma resposta, vou seguir com um cenário muito comum: um dashboard de performance de vendas para a liderança comercial. Se o seu contexto for outro, me avise e eu ajusto imediatamente.
-
-Cenário Hipotético: Dashboard de Performance de Vendas
-Com base neste cenário, aqui estão os artefatos estruturados para agregar o máximo de valor estratégico.
-
-Tipo: Epic
-Título: Otimização da Tomada de Decisão em Vendas com Business Intelligence
-Descrição: Atualmente, a liderança comercial baseia suas decisões estratégicas em relatórios manuais, demorados e suscetíveis a erros, extraídos de múltiplas fontes. Este épico visa centralizar os dados de vendas em um dashboard dinâmico e confiável, proporcionando uma visão clara e em tempo real da performance do time, produtos e regiões, a fim de agilizar e embasar decisões estratégicas que impulsionem a receita.
-Critérios de Aceite:
-A liderança de vendas consegue acessar um dashboard consolidado com os principais KPIs sem depender de relatórios manuais.
-O tempo para análise de performance de vendas trimestral é reduzido em pelo menos 50%.
-
-As reuniões de estratégia de vendas passam a ser 100% orientadas pelos dados apresentados no novo dashboard.
-Valor de Negócio: Aumentar a agilidade e a precisão nas decisões estratégicas de vendas, identificar rapidamente desvios e oportunidades, e otimizar a alocação de recursos para maximizar a receita.
-Stakeholders: Diretor(a) Comercial, Gerentes de Vendas, CEO, Analistas de Dados.
-Status: New
-Tipo: Feature
-Título: Visualização Consolidada de KPIs de Vendas por Região
-Descrição: Implementar uma visão centralizada no dashboard que permita à liderança comercial analisar e comparar os principais indicadores de performance (Receita, Volume de Vendas, Ticket Médio) de forma agregada e detalhada por cada região de atuação.
-Critérios de Aceite:
-O dashboard deve apresentar um mapa de calor com a receita total por região.
-
-Deve ser possível aplicar filtros por período (mês, trimestre, ano).
-
-Ao clicar em uma região, o dashboard deve detalhar os KPIs específicos daquela localidade.
-
-Os dados devem ser atualizados automaticamente a cada 24 horas.
-Valor de Negócio: Fornecer clareza sobre quais regiões estão performando acima ou abaixo da meta, permitindo ações focadas de marketing, treinamento ou remanejamento de equipe para corrigir rotas e potencializar resultados.
-Stakeholders: Diretor(a) Comercial, Gerentes Regionais de Vendas.
-Status: New
-Tipo: User Story
-Título: Gerente de Vendas: Analisar Receita por Vendedor dentro de uma Região
-Descrição: Como um Gerente de Vendas, eu quero visualizar um ranking de receita gerada por cada vendedor da minha região, para que eu possa identificar os top performers para ações de reconhecimento e os vendedores que precisam de coaching e suporte para atingir suas metas.
-Critérios de Aceite:
-Dado que estou na visão detalhada de uma região, devo ver um gráfico de barras com o nome de cada vendedor no eixo X e a receita total gerada no período selecionado no eixo Y.
-O gráfico deve estar ordenado da maior para a menor receita.
-
-Ao passar o mouse sobre a barra de um vendedor, um tooltip deve exibir o valor exato da receita e o percentual de atingimento da meta individual.
-Os dados devem refletir as vendas fechadas no CRM, com atualização diária (D-1).
-Valor de Negócio: Habilitar a gestão de performance individual de forma rápida e visual, direcionando os esforços de liderança para onde eles geram mais impacto (coaching e reconhecimento), o que tende a aumentar a produtividade e o engajamento do time.
-Stakeholders: Gerentes de Vendas, Time de Vendas (indireto).
-Status: New
-Tipo: Task
-Título: 1. Mapear e modelar os dados de Vendedores, Vendas e Metas no data source.
-Status: New
-Tipo: Task
-Título: 2. Desenvolver o script de extração (ETL) para conectar o Power BI ao CRM.
-Status: New
-Tipo: Task
-Título: 3. Criar o visual de gráfico de barras de "Receita por Vendedor" no Power BI.
-Status: New
-"""
-
-def simular_resposta_e_mapear_artefatos(conteudo_bruto):
-    # Separa o conteúdo em blocos usando "Tipo: [Artefato]" como delimitador
-    partes = re.split(r'(Tipo: \s*(?:Epic|Feature|User Story|Task))', conteudo_bruto)
-    
-    resultados = {}
-    
-    # Mapeamento do nome completo para a chave do dicionário
-    mapeamento = {'Epic': 'epic', 'Feature': 'feature', 'User Story': 'user_story', 'Task': 'task'}
-    
-    # Itera sobre as partes para reconstruir os artefatos
-    for i in range(1, len(partes), 2):
-        tipo_linha = partes[i].strip()
-        conteudo = partes[i+1].strip()
-        
-        # Extrai o nome do tipo (e.g., 'Epic')
-        tipo_nome = tipo_linha.split(':')[-1].strip()
-        chave = mapeamento.get(tipo_nome)
-        
-        if chave:
-            # Junta o título do tipo de volta ao conteúdo e armazena
-            # Para Tasks, precisamos tratar as 3 tasks separadamente
-            if chave == 'task':
-                 # Encontra todas as tasks e as junta em um único bloco
-                 task_blocos = re.findall(r'Título: .*?Status: New', conteudo, re.DOTALL)
-                 if task_blocos:
-                     # Remove o cabeçalho 'Tipo: Task' de cada bloco
-                     conteudo_final = '\n\n'.join([f"**{t.strip()}**" for t in task_blocos])
-                     
-                     # Simulação: Como a IA geraria o resultado
-                     resultados[chave] = "**TASKs Geradas:**\n\n" + conteudo_final
-            else:
-                # Simulação: Como a IA geraria o resultado
-                resultados[chave] = tipo_linha + "\n" + conteudo
-    
-    return resultados
-
 # =====================
-# FUNÇÃO PARA EXPORTAR PDF
+# FUNÇÃO PARA EXPORTAR PDF (CORRIGIDA - SEM EMOJIS)
 # =====================
 def exportar_pdf(resultados, filename="artefatos.pdf"):
     pdf = FPDF()
@@ -328,11 +225,7 @@ if menu_option == "🧠 Geração de Artefatos":
             with st.expander("3. ⏳ **Processo de Geração Inteligente** (Detalhes)", expanded=True):
                 st.markdown(f"Analisando **contexto** e **playbook** ({modelo_escolhido})...")
                 
-                # SIMULANDO O RESULTADO COMPLETO ANTES DO LOOP PARA FINS DE DEMONSTRAÇÃO
-                # EM UM PROJETO REAL, VOCÊ CHAMARIA A IA DENTRO DO LOOP ABAIXO
-                simulated_results = simular_resposta_e_mapear_artefatos(CONTEUDO_BRUTO) 
-
-                # Loop de geração (o que faz a mágica da atualização visual)
+                # Loop de geração
                 for i, tipo in enumerate(ARTEFATOS):
                     
                     # --- ATUALIZAÇÃO DO CARD: Estado 'Processando' ---
@@ -354,16 +247,12 @@ if menu_option == "🧠 Geração de Artefatos":
                         
                         try:
                             # Chamada IA
-                            # ATENÇÃO: COMENTEI A CHAMADA REAL PARA USAR O CONTEÚDO FIXO PARA DEMOSTRAR A CORREÇÃO VISUAL
-                            # if modelo_escolhido == "Gemini":
-                            #     resposta = gerar_resposta_gemini(prompt_final, config["api_keys"]["gemini"])
-                            # elif modelo_escolhido == "ChatGPT":
-                            #     resposta = gerar_resposta_gpt(prompt_final, config["api_keys"]["chatgpt"])
-                            # else:
-                            #     resposta = gerar_resposta_copilot(prompt_final, config["api_keys"]["copilot"])
-                            
-                            # USANDO RESULTADO SIMULADO
-                            resposta = simulated_results.get(tipo, f"Erro: Conteúdo simulado para {tipo.upper()} não encontrado.")
+                            if modelo_escolhido == "Gemini":
+                                resposta = gerar_resposta_gemini(prompt_final, config["api_keys"]["gemini"])
+                            elif modelo_escolhido == "ChatGPT":
+                                resposta = gerar_resposta_gpt(prompt_final, config["api_keys"]["chatgpt"])
+                            else:
+                                resposta = gerar_resposta_copilot(prompt_final, config["api_keys"]["copilot"])
                                 
                             resultados[tipo] = resposta
                             
@@ -388,7 +277,7 @@ if menu_option == "🧠 Geração de Artefatos":
                                 st.markdown(f"**<span style='color:{CORES[tipo]};'>{EMOJIS[tipo]} {tipo.upper()}</span>**", unsafe_allow_html=True)
                                 st.caption("❌ Erro de Geração")
                             
-                st.session_state["resultados"] = simulated_results # Usa o resultado simulado para exibição
+                st.session_state["resultados"] = resultados
                 st.toast("🚀 Geração de Artefatos Completa!", icon='🎉')
             
             st.markdown("---") # Separador após a conclusão da geração
@@ -411,7 +300,7 @@ if menu_option == "🧠 Geração de Artefatos":
                     )
                     
                     # 🌟 CORREÇÃO DE LÓGICA APLICADA AQUI
-                    # Acessa o resultado específico para a aba atual
+                    # Acessa o resultado específico para a aba atual usando a variável 'tipo'
                     conteudo = st.session_state["resultados"].get(tipo, "Não gerado ou erro.")
                     
                     # Aplica o estilo de caixa de texto com a cor da borda do artefato
