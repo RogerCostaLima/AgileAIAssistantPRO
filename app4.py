@@ -8,15 +8,24 @@ import io
 import pandas as pd
 
 # =====================
-# CONFIGURAÇÃO DE ESTILO E CORES PREMIUM
-# =====================
+# CONFIGURAÇÃO DE ESTILO E CORES PREMIUM (COCA-COLA INSPIRED)
+# ==========================================================
 
-# Paleta de Cores Premium (Harmonizada)
+# Paleta de Cores
+CORES_COCA = {
+    "VERMELHO_PRIMARIO": "#E60000",
+    "PRETO_SOLIDO": "#1A1A1A",
+    "AMARELO_DOURADO": "#FFC300",
+    "LARANJA_ESCURO": "#FF8C00",
+    "FUNDO_CARD": "#FFF0F0" 
+}
+
+# Cores de Artefato mapeadas para a Paleta
 CORES = {
-    "epic": "#4A70A7",    # Azul Sóbrio - Visão
-    "feature": "#FF9800", # Laranja de Ação - Bloco
-    "user_story": "#2196F3", # Azul Claro Profissional - Detalhe
-    "task": "#4CAF50"    # Verde de Conclusão - Execução
+    "epic": CORES_COCA["VERMELHO_PRIMARIO"],  
+    "feature": CORES_COCA["AMARELO_DOURADO"], 
+    "user_story": CORES_COCA["LARANJA_ESCURO"], 
+    "task": CORES_COCA["PRETO_SOLIDO"]       
 }
 EMOJIS = {
     "epic": "👑",
@@ -28,42 +37,66 @@ ARTEFATOS = ["epic", "feature", "user_story", "task"]
 
 st.set_page_config(page_title="Assistente Ágil IA Premium", layout="wide", page_icon="⚡")
 
-# Custom CSS para o toque premium, os cards de fluxo e a CORREÇÃO VISUAL DO TEXTO GERADO
-st.markdown("""
+# Custom CSS para o toque premium
+st.markdown(f"""
 <style>
-/* Título Principal Impactante */
-.stApp > header {
+/* 1. Reset e Cores de Fundo */
+.stApp {{
+    color: {CORES_COCA["PRETO_SOLIDO"]}; 
+}}
+.stApp > header {{
     background-color: transparent;
-}
-.big-font {
-    font-size:30px !important;
-    font-weight: bold;
-    color: #4A70A7; /* Cor principal - Azul Sóbrio */
-    text-shadow: 2px 2px 4px #ccc;
-}
-/* Estilo para os Cards de Fluxo */
-.stContainer {
+}}
+/* 2. Estilo do Cabeçalho principal */
+h1.st-emotion-cache-121aa6r {{ 
+    color: {CORES_COCA["VERMELHO_PRIMARIO"]};
+    font-size: 36px;
+    border-bottom: 3px solid {CORES_COCA["VERMELHO_PRIMARIO"]};
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}}
+/* 3. Estilo para os Cards de Fluxo */
+.stContainer {{
     border-radius: 10px;
     padding: 20px;
+    background-color: {CORES_COCA["FUNDO_CARD"]}; 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
     transition: 0.3s;
-}
-.stContainer:hover {
+}}
+.stContainer:hover {{
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-}
+}}
 /* Ajuste de espaçamento para o sidebar */
-[data-testid="stSidebarContent"] {
+[data-testid="stSidebarContent"] {{
     padding-top: 2rem;
-}
-/* CORREÇÃO: Estilo para a caixa de texto gerado (com quebra de linha) */
-.generated-text-box {
-    background-color: #f8f9fa;
+}}
+/* ESTILO AJUSTADO: CORREÇÃO NO LAYOUT DO TEXTO DENTRO DOS RESULTADOS */
+.generated-text-box {{
+    background-color: white; 
+    border: 1px solid #ddd;
+    border-left: 5px solid {CORES_COCA["VERMELHO_PRIMARIO"]}; 
     padding: 15px;
     border-radius: 5px;
-    white-space: pre-wrap; /* Garante quebras de linha e formatação Markdown */
+    white-space: pre-wrap; /* Garante quebras de linha e estrutura */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-}
+    line-height: 1.5; /* Espaçamento de linha mais compacto */
+    margin-bottom: 10px; /* Espaço após a caixa */
+}}
+/* Estilo para o TÍTULO DA ABA DE RESULTADOS */
+.result-tab-title {{
+    background-color: {CORES_COCA["PRETO_SOLIDO"]}; /* Fundo Preto Sólido */
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px 5px 0 0;
+    margin-top: 10px;
+}}
+/* Cor do botão primário */
+div.stButton > button.st-emotion-cache-nahz7x {{
+    background-color: {CORES_COCA["VERMELHO_PRIMARIO"]};
+    color: white;
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -77,8 +110,7 @@ except FileNotFoundError:
     st.stop()
 
 # =====================
-# FUNÇÃO PARA EXPORTAR PDF
-# (Adaptada com as novas cores)
+# FUNÇÃO PARA EXPORTAR PDF (CORRIGIDA - SEM EMOJIS)
 # =====================
 def exportar_pdf(resultados, filename="artefatos.pdf"):
     pdf = FPDF()
@@ -86,21 +118,25 @@ def exportar_pdf(resultados, filename="artefatos.pdf"):
     
     pdf.add_page()
     pdf.set_font("Arial", 'B', 18)
-    pdf.set_text_color(74, 112, 167) # Nova cor principal
-    pdf.cell(0, 15, "ARTEFATOS ÁGEIS GERADOS POR IA ⚡", ln=True, align='C')
+    pdf.set_text_color(230, 0, 0) 
+    
+    # 1. Título principal do PDF sem emojis
+    pdf.cell(0, 15, "ARTEFATOS ÁGEIS GERADOS POR IA", ln=True, align='C') 
     pdf.ln(10)
     
     for tipo, conteudo in resultados.items():
-        pdf.set_fill_color(240, 245, 255) # Fundo levemente azul
+        pdf.set_fill_color(255, 240, 240) 
         pdf.set_font("Arial", 'B', 14)
         pdf.set_text_color(0, 0, 0)
         
-        pdf.cell(0, 8, f"{EMOJIS.get(tipo, '')} {tipo.upper()}", ln=True, fill=True)
+        # 2. Título do Artefato sem emojis (uso de .upper() garante o nome)
+        pdf.cell(0, 8, f"{tipo.upper()}", ln=True, fill=True)
         
         pdf.set_font("Arial", '', 11)
         pdf.set_text_color(50, 50, 50)
         
         try:
+            # Garante que o conteúdo seja lido, mesmo com possíveis problemas de codificação
             conteudo_str = conteudo.encode('latin-1', 'replace').decode('latin-1')
         except:
             conteudo_str = conteudo 
@@ -117,7 +153,7 @@ def exportar_pdf(resultados, filename="artefatos.pdf"):
 # CONFIGURAÇÕES DE IA (Sidebar)
 # =====================
 with st.sidebar:
-    st.header("🎯 **Ciclo de Refinamento Ágil**")
+    st.header(f"🎯 **Ciclo de Refinamento Ágil**")
     st.markdown("---")
     menu_option = st.radio(
         "Navegação Rápida",
@@ -131,59 +167,55 @@ with st.sidebar:
 # GERAÇÃO DE ARTEFATOS (Principal)
 # =========================================================================================
 if menu_option == "🧠 Geração de Artefatos":
-    st.markdown('<p class="big-font">⚡ Assistente Ágil IA - Refinamento Acelerado</p>', unsafe_allow_html=True)
+    
+    st.header("⚡ Assistente Ágil IA - Refinamento Acelerado")
     st.info("Defina o escopo, gere o ciclo completo de artefatos ágeis e prepare-se para o *sprint*.")
     
     st.markdown("---")
 
-    # --- 1. Input do Usuário (Layout aprimorado) ---
-    st.subheader("1. 📝 Defina o Escopo")
-    
-    col_contexto, col_notas = st.columns(2)
-    with col_contexto:
-        contexto = st.text_area("🧩 Contexto principal do projeto", height=150, help="Descreva o projeto, produto ou funcionalidade principal.", key="input_contexto")
-    
-    with col_notas:
-        notas = st.text_area("📝 Notas e Diretrizes adicionais", height=150, help="Informações extras, restrições ou público-alvo.", key="input_notas")
+    # --- 1. Defina o Escopo (COM EXPANDER) ---
+    with st.expander("1. 📝 **Defina o Escopo** (Clique para expandir)", expanded=True):
+        col_contexto, col_notas = st.columns(2)
+        with col_contexto:
+            contexto = st.text_area("🧩 Contexto principal do projeto", height=150, help="Descreva o projeto, produto ou funcionalidade principal.", key="input_contexto")
+        
+        with col_notas:
+            notas = st.text_area("📝 Notas e Diretrizes adicionais", height=150, help="Informações extras, restrições ou público-alvo.", key="input_notas")
 
-    col_model, col_button = st.columns([2, 1])
-    with col_model:
-        modelo_escolhido = st.selectbox("🧠 Modelo de IA para Geração", ["Gemini", "ChatGPT", "Copilot"], help="Selecione o LLM desejado.", key="select_model")
-    with col_button:
-        st.write("") 
-        gerar = st.button("🚀 INICIAR GERAÇÃO DE ARTEFATOS", type="primary", use_container_width=True)
+        col_model, col_button = st.columns([2, 1])
+        with col_model:
+            modelo_escolhido = st.selectbox("🧠 Modelo de IA para Geração", ["Gemini", "ChatGPT", "Copilot"], help="Selecione o LLM desejado.", key="select_model")
+        with col_button:
+            st.write("") 
+            gerar = st.button("🚀 INICIAR GERAÇÃO DE ARTEFATOS", type="primary", use_container_width=True)
 
     st.markdown("---")
     
-    # --- 2. Processamento e Fluxo Visual (Cards Premium Limpos) ---
-    st.subheader("2. 💡 Visualização do Ciclo")
-    
-    cols_flow = st.columns(len(ARTEFATOS))
-    
-    # Lista de placeholders para os cards serem atualizados
-    card_placeholders = []
-    
-    # Inicializa os cards fixos (sem repetição)
-    for i, tipo in enumerate(ARTEFATOS):
-        with cols_flow[i]:
-            # Cria um container placeholder para o card
-            card_ph = st.empty()
-            card_placeholders.append(card_ph)
-            
-            # Desenha o estado inicial do card
-            with card_ph.container(border=True):
-                emoji = EMOJIS[tipo]
-                cor = CORES[tipo]
-                titulo = tipo.upper()
+    # --- 2. Visualização do Ciclo (COM EXPANDER) ---
+    with st.expander("2. 💡 **Visualização do Ciclo** (Clique para acompanhar)", expanded=True):
+        cols_flow = st.columns(len(ARTEFATOS))
+        
+        card_placeholders = []
+        
+        # Inicializa os cards fixos (sem repetição)
+        for i, tipo in enumerate(ARTEFATOS):
+            with cols_flow[i]:
+                card_ph = st.empty()
+                card_placeholders.append(card_ph)
                 
-                is_done = "resultados" in st.session_state and tipo in st.session_state["resultados"]
-                
-                st.markdown(f"**<span style='color:{cor};'>{emoji} {titulo}</span>**", unsafe_allow_html=True)
-                if is_done:
-                     st.caption("✅ Concluído")
-                else:
-                    st.caption("⚪ Não iniciado")
+                with card_ph.container(border=True):
+                    emoji = EMOJIS[tipo]
+                    cor = CORES[tipo]
+                    titulo = tipo.upper()
                     
+                    is_done = "resultados" in st.session_state and tipo in st.session_state["resultados"]
+                    
+                    st.markdown(f"**<span style='color:{cor};'>{emoji} {titulo}</span>**", unsafe_allow_html=True)
+                    if is_done:
+                         st.caption("✅ Concluído")
+                    else:
+                        st.caption("⚪ Não iniciado")
+                        
     st.markdown("---")
 
     if gerar:
@@ -192,81 +224,89 @@ if menu_option == "🧠 Geração de Artefatos":
         else:
             resultados = {}
             
-            # NOVO TÍTULO DE RESUMO
-            st.subheader("3. ⏳ Processo de Geração Inteligente")
-            st.markdown(f"Analisando **contexto** e **playbook** ({modelo_escolhido})...")
-            
-            # Loop de geração
-            for i, tipo in enumerate(ARTEFATOS):
+            # --- 3. Processo de Geração Inteligente (COM EXPANDER) ---
+            with st.expander("3. ⏳ **Processo de Geração Inteligente** (Detalhes)", expanded=True):
+                st.markdown(f"Analisando **contexto** e **playbook** ({modelo_escolhido})...")
                 
-                # --- ATUALIZAÇÃO DO CARD: Estado 'Processando' ---
-                with card_placeholders[i].container(border=True):
-                    st.markdown(f"**<span style='color:{CORES[tipo]};'>{EMOJIS[tipo]} {tipo.upper()}</span>**", unsafe_allow_html=True)
-                    st.caption("⚡ Processando...")
-                
-                # NOVO CONTEÚDO PARA ST.STATUS
-                with st.status(f"{EMOJIS[tipo]} Gerando **{tipo.upper()}** com {modelo_escolhido}...", expanded=False, state="running") as status:
+                # Loop de geração
+                for i, tipo in enumerate(ARTEFATOS):
                     
-                    st.write(f"**{EMOJIS[tipo]} PASSO 1/3: Construindo Prompt (contextualizando {tipo.upper()}).**")
+                    # --- ATUALIZAÇÃO DO CARD: Estado 'Processando' ---
+                    with card_placeholders[i].container(border=True):
+                        st.markdown(f"**<span style='color:{CORES[tipo]};'>{EMOJIS[tipo]} {tipo.upper()}</span>**", unsafe_allow_html=True)
+                        st.caption("⚡ Processando...")
                     
-                    prompt_final = f"{config.get('ia_role','')}\n\n"
-                    if "playbook_text" in config:
-                        prompt_final += f"Playbook/Diretriz: {config['playbook_text']}\n\n"
-                    prompt_final += f"{config['prompts'][tipo]}\n\nContexto:\n{contexto}\nNotas:\n{notas}"
-                    
-                    st.write(f"**{EMOJIS[tipo]} PASSO 2/3: Invocando Modelo de IA ({modelo_escolhido}).**")
-                    
-                    try:
-                        # Chamada IA
-                        if modelo_escolhido == "Gemini":
-                            resposta = gerar_resposta_gemini(prompt_final, config["api_keys"]["gemini"])
-                        elif modelo_escolhido == "ChatGPT":
-                            resposta = gerar_resposta_gpt(prompt_final, config["api_keys"]["chatgpt"])
-                        else:
-                            resposta = gerar_resposta_copilot(prompt_final, config["api_keys"]["copilot"])
+                    # Usa st.status para feedback detalhado
+                    with st.status(f"{EMOJIS[tipo]} Gerando **{tipo.upper()}** com {modelo_escolhido}...", expanded=False, state="running") as status:
+                        
+                        st.write(f"**{EMOJIS[tipo]} PASSO 1/3: Construindo Prompt (contextualizando {tipo.upper()}).**")
+                        
+                        prompt_final = f"{config.get('ia_role','')}\n\n"
+                        if "playbook_text" in config:
+                            prompt_final += f"Playbook/Diretriz: {config['playbook_text']}\n\n"
+                        prompt_final += f"{config['prompts'][tipo]}\n\nContexto:\n{contexto}\nNotas:\n{notas}"
+                        
+                        st.write(f"**{EMOJIS[tipo]} PASSO 2/3: Invocando Modelo de IA ({modelo_escolhido}).**")
+                        
+                        try:
+                            # Chamada IA
+                            if modelo_escolhido == "Gemini":
+                                resposta = gerar_resposta_gemini(prompt_final, config["api_keys"]["gemini"])
+                            elif modelo_escolhido == "ChatGPT":
+                                resposta = gerar_resposta_gpt(prompt_final, config["api_keys"]["chatgpt"])
+                            else:
+                                resposta = gerar_resposta_copilot(prompt_final, config["api_keys"]["copilot"])
+                                
+                            resultados[tipo] = resposta
                             
-                        resultados[tipo] = resposta
-                        
-                        st.write(f"**{EMOJIS[tipo]} PASSO 3/3: Artefato recebido e validado.**")
-                        status.update(label=f"✅ **{tipo.upper()}** - Geração Finalizada!", state="complete", expanded=False)
-                        
-                        # --- ATUALIZAÇÃO DO CARD: Estado 'Concluído' ---
-                        with card_placeholders[i].container(border=True):
-                            st.markdown(f"**<span style='color:{CORES[tipo]};'>{EMOJIS[tipo]} {tipo.upper()}</span>**", unsafe_allow_html=True)
-                            st.caption("✅ Concluído com sucesso")
-                        
-                    except Exception as e:
-                        resposta = f"Erro ao gerar {tipo.upper()}: {e}"
-                        resultados[tipo] = resposta
-                        
-                        st.write(f"**{EMOJIS[tipo]} ERRO FATAL: Falha na comunicação com a API.**")
-                        status.update(label=f"❌ Erro ao gerar {tipo.upper()}", state="error", expanded=True)
-                        st.exception(e)
-                        
-                        # --- ATUALIZAÇÃO DO CARD: Estado 'Erro' ---
-                        with card_placeholders[i].container(border=True):
-                            st.markdown(f"**<span style='color:{CORES[tipo]};'>{EMOJIS[tipo]} {tipo.upper()}</span>**", unsafe_allow_html=True)
-                            st.caption("❌ Erro de Geração")
-                        
-            st.session_state["resultados"] = resultados
-            st.toast("🚀 Geração de Artefatos Completa!", icon='🎉')
+                            st.write(f"**{EMOJIS[tipo]} PASSO 3/3: Artefato recebido e validado.**")
+                            status.update(label=f"✅ **{tipo.upper()}** - Geração Finalizada!", state="complete", expanded=False)
+                            
+                            # --- ATUALIZAÇÃO DO CARD: Estado 'Concluído' ---
+                            with card_placeholders[i].container(border=True):
+                                st.markdown(f"**<span style='color:{CORES[tipo]};'>{EMOJIS[tipo]} {tipo.upper()}</span>**", unsafe_allow_html=True)
+                                st.caption("✅ Concluído com sucesso")
+                            
+                        except Exception as e:
+                            resposta = f"Erro ao gerar {tipo.upper()}: {e}"
+                            resultados[tipo] = resposta
+                            
+                            st.write(f"**{EMOJIS[tipo]} ERRO FATAL: Falha na comunicação com a API.**")
+                            status.update(label=f"❌ Erro ao gerar {tipo.upper()}", state="error", expanded=True)
+                            st.exception(e)
+                            
+                            # --- ATUALIZAÇÃO DO CARD: Estado 'Erro' ---
+                            with card_placeholders[i].container(border=True):
+                                st.markdown(f"**<span style='color:{CORES[tipo]};'>{EMOJIS[tipo]} {tipo.upper()}</span>**", unsafe_allow_html=True)
+                                st.caption("❌ Erro de Geração")
+                            
+                st.session_state["resultados"] = resultados
+                st.toast("🚀 Geração de Artefatos Completa!", icon='🎉')
             
-    # --- 3. Exibição dos Detalhes (Correção de Funcionalidade Visual) ---
+            st.markdown("---") # Separador após a conclusão da geração
+
+    # --- 4. Exibição dos Detalhes (COM EXPANDER e VISUAL COMPACTO) ---
     if "resultados" in st.session_state:
-        st.markdown("## 4. 📖 Detalhes dos Artefatos")
-        st.success("Visualize os resultados e vá para 'Exportação' para baixar a planilha!")
-        
-        tabs = st.tabs([f"{EMOJIS[tipo]} {tipo.upper()}" for tipo in ARTEFATOS])
-        
-        for i, tipo in enumerate(ARTEFATOS):
-            with tabs[i]:
-                st.subheader(f"Conteúdo do {tipo.upper()}")
-                
-                # Usa a classe CSS para quebrar linha e dar o visual premium
-                conteudo = st.session_state["resultados"].get(tipo, "Não gerado ou erro.")
-                
-                # Aplica o estilo de caixa de texto com a cor da borda do artefato
-                st.markdown(f"<div class='generated-text-box' style='border-left: 5px solid {CORES[tipo]};'>{conteudo}</div>", unsafe_allow_html=True)
+        with st.expander("4. 📖 **Detalhes dos Artefatos** (Resultados Finais)", expanded=True):
+            st.success("Visualize os resultados e vá para 'Exportação' para baixar a planilha!")
+            
+            tabs = st.tabs([f"{EMOJIS[tipo]} {tipo.upper()}" for tipo in ARTEFATOS])
+            
+            for i, tipo in enumerate(ARTEFATOS):
+                with tabs[i]:
+                    # Título compacto com fundo escuro
+                    st.markdown(
+                        f"<div class='result-tab-title' style='background-color: {CORES[tipo]};'>"
+                        f"Conteúdo Detalhado: {tipo.upper()}"
+                        f"</div>", 
+                        unsafe_allow_html=True
+                    )
+                    
+                    # Usa a classe CSS para quebrar linha e dar o visual premium
+                    conteudo = st.session_state["resultados"].get(tipo, "Não gerado ou erro.")
+                    
+                    # Aplica o estilo de caixa de texto com a cor da borda do artefato
+                    st.markdown(f"<div class='generated-text-box' style='border-left: 5px solid {CORES[tipo]};'>{conteudo}</div>", unsafe_allow_html=True)
 
 # =====================
 # CONFIGURAÇÕES
@@ -322,7 +362,9 @@ elif menu_option == "ℹ️ Sobre":
     
     ### 🎯 Nosso Objetivo
     Reduzir o tempo gasto em detalhamento e documentação, permitindo que o time se concentre na **entrega de valor**.
+    
     ---
+    
     #### 👑 EPIC (Visão)
     Define o objetivo de alto nível.
     
@@ -334,7 +376,9 @@ elif menu_option == "ℹ️ Sobre":
     
     #### 🛠️ TASK (Execução)
     As atividades técnicas necessárias para implementar a User Story.
+    
     ---
+    
     **Desenvolvido com 💛 e Python/Streamlit.**
     """)
 
@@ -375,5 +419,5 @@ elif menu_option == "📂 Exportação":
                     use_container_width=True
                 )
             except Exception as e:
-
-                st.error(f"Erro ao gerar PDF: {e}. Verifique as permissões de codificação de texto.")
+                # O erro de codificação do PDF deve estar resolvido
+                st.error(f"Erro ao gerar PDF: {e}. Se o erro persistir, verifique a instalação do fpdf.")
